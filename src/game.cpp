@@ -2,12 +2,17 @@
 #include <iostream>
 #include "SDL.h"
 
-Game::Game(std::size_t grid_width, std::size_t grid_height)
+Game::Game(std::size_t grid_width, std::size_t grid_height, int mode)
     : snake(grid_width, grid_height),
       engine(dev()),
-      random_w(0, static_cast<int>(grid_width - 1)),
-      random_h(0, static_cast<int>(grid_height - 1)) {
+      random_w(0, static_cast<int>(grid_width)-1),
+      random_h(0, static_cast<int>(grid_height)-1) {
+  if (mode == 2) SetPlayer();
   PlaceFood();
+}
+
+void Game::SetPlayer() {
+  player.reset(new Player(&snake, &food));
 }
 
 void Game::Run(Controller const &controller, Renderer &renderer,
@@ -23,17 +28,19 @@ void Game::Run(Controller const &controller, Renderer &renderer,
     frame_start = SDL_GetTicks();
 
     // Input, Update, Render - the main game loop.
+    if (player) player->play();
     controller.HandleInput(running, snake);
     Update();
     renderer.Render(snake, food);
 
     frame_end = SDL_GetTicks();
 
-    // Keeping track of how long each game loop takes.
+    // Keep track of how long each loop through the input/update/render cycle
+    // takes.
     frame_count++;
     frame_duration = frame_end - frame_start;
 
-    // After every second, updating the window title.
+    // After every second, update the window title.
     if (frame_end - title_timestamp >= 1000) {
       renderer.UpdateWindowTitle(score, frame_count);
       frame_count = 0;
@@ -41,7 +48,7 @@ void Game::Run(Controller const &controller, Renderer &renderer,
     }
 
     // If the time for this frame is too small (i.e. frame_duration is
-    // smaller than the target ms_per_frame), then delaying the loop to
+    // smaller than the target ms_per_frame), delay the loop to
     // achieve the correct frame rate.
     if (frame_duration < target_frame_duration) {
       SDL_Delay(target_frame_duration - frame_duration);
@@ -54,8 +61,8 @@ void Game::PlaceFood() {
   while (true) {
     x = random_w(engine);
     y = random_h(engine);
-    // Checking that the location is not occupied by a snake item before 
-    // placing food.
+    // Check that the location is not occupied by a snake item before placing
+    // food.
     if (!snake.SnakeCell(x, y)) {
       food.x = x;
       food.y = y;
@@ -65,29 +72,22 @@ void Game::PlaceFood() {
 }
 
 void Game::Update() {
-  if (!snake.alive) {
-    return;
-  }
+  if (!snake.alive) return;
 
   snake.Update();
 
   int new_x = static_cast<int>(snake.head_x);
   int new_y = static_cast<int>(snake.head_y);
 
-  // Checking if the food is present 
+  // Check if there's food over here
   if (food.x == new_x && food.y == new_y) {
     score++;
     PlaceFood();
-    // Growing snake and increase speed.
+    // Grow snake and increase speed.
     snake.GrowBody();
-    snake.speed += 0.01;
+    snake.speed += 0.02;
   }
 }
 
-int Game::GetScore() const { 
-  return score; 
-}
-
-int Game::GetSize() const { 
-  return snake.size; 
-}
+int Game::GetScore() const { return score; }
+int Game::GetSize() const { return snake.size; }

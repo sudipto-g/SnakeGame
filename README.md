@@ -1,8 +1,9 @@
 
 # Snake Game
 
-The code for this repo was inspired by [this](https://codereview.stackexchange.com/questions/212296/snake-game-in-c-with-sdl) StackExchange post and set of responses.
-
+The code for this repo was inspired by [this](https://codereview.stackexchange.com/questions/212296/snake-game-in-c-with-sdl) StackExchange post and set of responses.  
+In extension, an option has been set for an AI to play the game.  
+(Caveat: the AI is not fool-proof and in a future extension, I wish to handle the corner case wherein the game ends since the AI fails to see the situation where the snake's head hits its tail, owing to its body length being too long).  
 <img src="snake_game.gif"/>
 
 
@@ -39,7 +40,10 @@ The code for this repo was inspired by [this](https://codereview.stackexchange.c
 1. Open Command Line and clone this repo using `git clone https://github.com/sudipto-g/SnakeGame.git`
 2. Next, create a build directory in the top level directory/root using `mkdir build && cd build`
 3. Compile the code using `cmake .. && make`
-4. Run using `./SnakeGame`
+4. Run using `./PlayGame`
+5. You'll be asked on the CMD Line to select if you :
+    * would youself play the game or 
+    * would like to watch the AI play the game 
 
 
 
