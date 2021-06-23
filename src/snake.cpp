@@ -5,15 +5,16 @@
 void Snake::Update() {
   SDL_Point prev_cell{
       static_cast<int>(head_x),
-      static_cast<int>(
-          head_y)};  // We first capture the head's cell before updating.
-  UpdateHead();
+      static_cast<int>(head_y)
+    };   //Capturing the head's cell before updating.
+  UpdateHead(); //Updating head
   SDL_Point current_cell{
       static_cast<int>(head_x),
-      static_cast<int>(head_y)};  // Capture the head's cell after updating.
+      static_cast<int>(head_y)
+      }; // Capturing the head's cell after updating.
 
-  // Update all of the body vector items if the snake head has moved to a new
-  // cell.
+  // Updating all of the body vector items if the snake 
+  // head has moved to a new cell.
   if (current_cell.x != prev_cell.x || current_cell.y != prev_cell.y) {
     UpdateBody(current_cell, prev_cell);
   }
@@ -38,17 +39,17 @@ void Snake::UpdateHead() {
       break;
   }
 
-  // Wrap the Snake around to the beginning if going off of the screen.
+  // Wrap the Snake around the screen if it goes off it.
   head_x = fmod(head_x + grid_width, grid_width);
   head_y = fmod(head_y + grid_height, grid_height);
 }
 
 void Snake::UpdateBody(SDL_Point &current_head_cell, SDL_Point &prev_head_cell) {
-  // Add previous head location to vector
+  // Adding previous head location to vector
   body.push_back(prev_head_cell);
 
   if (!growing) {
-    // Remove the tail from the vector.
+    // Removing the tail from the vector.
     body.erase(body.begin());
   } else {
     growing = false;
@@ -63,9 +64,11 @@ void Snake::UpdateBody(SDL_Point &current_head_cell, SDL_Point &prev_head_cell) 
   }
 }
 
-void Snake::GrowBody() { growing = true; }
+void Snake::GrowBody() { 
+  growing = true; 
+}
 
-// Inefficient method to check if cell is occupied by snake.
+// Method to check if cell (x,y) is occupied by snake.
 bool Snake::SnakeCell(int x, int y) {
   if (x == static_cast<int>(head_x) && y == static_cast<int>(head_y)) {
     return true;

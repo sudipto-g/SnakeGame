@@ -10,14 +10,7 @@
 #include "player.h"
 
 class Game {
- public:
-  Game(std::size_t grid_width, std::size_t grid_height, int mode);
-  void Run(Controller const &controller, Renderer &renderer,
-           std::size_t target_frame_duration);
-  int GetScore() const;
-  int GetSize() const;
-
- private:
+  private:
   Snake snake;
   SDL_Point food;
   std::unique_ptr<Player> player;  
@@ -32,6 +25,13 @@ class Game {
   void PlaceFood();
   void Update();
   void SetPlayer();
+  
+  public:
+  Game(std::size_t grid_width, std::size_t grid_height, int mode);
+  void Run(Controller const &controller, Renderer &renderer,
+           std::size_t target_frame_duration);
+  int GetScore() const;
+  int GetSize() const;
 };
 
 #endif
